@@ -65,8 +65,13 @@ paths:
                     properties:
                       data: 
                         type: object
-                        allOf:
-                          - $ref: '#/components/schemas/RegisterUser'
+                        properties:
+                          username:
+                            type: string
+                            example: andra
+                          role:
+                            type: string
+                            example: user
         '409':
           description: 'Conflict: Username already exist'
           content:
