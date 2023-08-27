@@ -41,10 +41,16 @@ const client = new mongodb_1.MongoClient(uri);
 const dbName = 'RevoU';
 function connectToDatabase() {
     return __awaiter(this, void 0, void 0, function* () {
-        (0, utils_1.loggerTimestamp)("Connecting to database");
-        yield client.connect();
-        const db = client.db(dbName);
-        return db;
+        try {
+            (0, utils_1.loggerTimestamp)("Connecting to database");
+            yield client.connect();
+            (0, utils_1.loggerTimestamp)("Connected to database1");
+            const db = client.db(dbName);
+            return db;
+        }
+        catch (error) {
+            throw new Error("Database connection error");
+        }
     });
 }
 exports.default = connectToDatabase;

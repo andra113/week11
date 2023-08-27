@@ -32,7 +32,8 @@ const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const OpenApiValidator = __importStar(require("express-openapi-validator"));
 const cors_1 = __importDefault(require("cors"));
 const userRoutes_1 = __importDefault(require("./routers/userRoutes"));
-// import errorHandler from "./src/middleware/errorHandler";
+const databaseMiddleware_1 = __importDefault(require("./middlewares/databaseMiddleware"));
+const errorHandler_1 = __importDefault(require("./middlewares/errorHandler"));
 const fs = __importStar(require("fs"));
 const yaml = __importStar(require("js-yaml"));
 const yamlContent = fs.readFileSync('docs/openApi.yaml', 'utf8');
@@ -42,6 +43,7 @@ const app = (0, express_1.default)();
 const port = process.env.PORT;
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
+app.use(databaseMiddleware_1.default);
 app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocument));
 app.use(OpenApiValidator.middleware({
     apiSpec: swaggerDocument,
@@ -49,7 +51,7 @@ app.use(OpenApiValidator.middleware({
     validateResponses: true, // false by default
 }));
 app.use('/api', userRoutes_1.default);
-// app.use(errorHandler)
+app.use(errorHandler_1.default);
 app.listen(port, () => {
     console.log(`server listen ${port}`);
 });

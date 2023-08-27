@@ -15,12 +15,16 @@ const user_1 = require("../services/user");
 function getUsersController(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const db = req;
-            const users = yield (0, user_1.getAllUsers)(db);
-            res.json(users);
+            const users = yield (0, user_1.getAllUsers)(req.db);
+            console.log(users[0]);
+            res.json({
+                success: true,
+                message: "Users fetched succesfully",
+                data: users
+            });
         }
         catch (error) {
-            return;
+            res.json({});
         }
     });
 }

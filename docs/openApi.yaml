@@ -108,6 +108,8 @@ components:
           enum:
             - admin
             - user
+            - approver
+            - maker
           example: admin
     User:
       allOf:

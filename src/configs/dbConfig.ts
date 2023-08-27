@@ -8,10 +8,15 @@ const client = new MongoClient(uri);
 const dbName = 'RevoU';
 
 async function connectToDatabase(): Promise<Db> {
-    loggerTimestamp("Connecting to database")
-    await client.connect();
-    const db = client.db(dbName);
-    return db
+    try {
+        loggerTimestamp("Connecting to database")
+        await client.connect();
+        loggerTimestamp("Connected to database1")
+        const db = client.db(dbName);
+        return db 
+    } catch (error) {
+        throw new Error("Database connection error")
+    }   
 }
 
 export default connectToDatabase;

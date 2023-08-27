@@ -5,7 +5,8 @@ import swaggerJSDoc from "swagger-jsdoc";
 import * as OpenApiValidator from "express-openapi-validator";
 import cors from "cors";
 import userRouter from "./routers/userRoutes";
-// import errorHandler from "./src/middleware/errorHandler";
+import databaseMiddleware from "./middlewares/databaseMiddleware";
+import errorHandler from "./middlewares/errorHandler";
 
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
@@ -20,6 +21,7 @@ const port = process.env.PORT;
 
 app.use(cors());
 app.use(express.json());
+app.use(databaseMiddleware)
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(
     OpenApiValidator.middleware({
@@ -29,7 +31,7 @@ app.use(
     }),
 );
 app.use('/api', userRouter)
-// app.use(errorHandler)
+app.use(errorHandler)
 
 
 
