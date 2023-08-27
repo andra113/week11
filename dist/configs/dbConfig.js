@@ -36,13 +36,13 @@ const utils_1 = require("../utils/utils");
 const mongodb_1 = require("mongodb");
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
-const uri = process.env.MONGODB;
+const uri = process.env.MONGO_DB;
 const client = new mongodb_1.MongoClient(uri);
 const dbName = 'RevoU';
 function connectToDatabase() {
     return __awaiter(this, void 0, void 0, function* () {
+        (0, utils_1.loggerTimestamp)("Connecting to database");
         yield client.connect();
-        (0, utils_1.loggerTimestamp)("Connected to database");
         const db = client.db(dbName);
         return db;
     });
