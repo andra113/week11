@@ -1,4 +1,4 @@
-import { Db } from "mongodb";
+import { Db, ObjectId } from "mongodb";
 import { UserModel } from "../models/dataModel";
 import jwt from "jsonwebtoken";
 
@@ -20,10 +20,10 @@ async function getUsernameByUsername(username: string, db: Db) {
 	return userResult;
 }
 
-async function loginAndReturnToken(id: string, role: string): Promise<string> {
+async function loginAndReturnToken(id: ObjectId, role: string): Promise<string> {
     const payload = {id, role}
     const token = await jwt.sign(payload, "kutulompat")
     return token
 }
 
-export { getAllUsers, registerUser, getUsernameByUsername };
+export { getAllUsers, registerUser, getUsernameByUsername, loginAndReturnToken };

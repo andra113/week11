@@ -13,7 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loginUserController = exports.registerUserController = exports.getUsersController = void 0;
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const user_1 = require("../services/user");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 // import { secretKey } from "../middleware/jwtAuth";
@@ -78,10 +77,11 @@ function loginUserController(req, res) {
         if (!userExist) {
             return;
         }
-        if (password != userExist.password) {
+        const passwordMatched = yield bcrypt_1.default.compare(password, userExist.password);
+        if (!passwordMatched) {
             return;
         }
-        jsonwebtoken_1.default.sign((userExist._id, userExist.role), "adfa");
+        const token = yield (0, user_1.loginAndReturnToken)(userExist._id, userExist.role);
     });
 }
 exports.loginUserController = loginUserController;

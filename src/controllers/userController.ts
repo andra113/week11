@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { UserModel } from "../models/dataModel";
-import { getAllUsers, registerUser, getUsernameByUsername } from "../services/user";
+import { getAllUsers, registerUser, getUsernameByUsername, loginAndReturnToken } from "../services/user";
 import bcrypt from "bcrypt";
 import { loggerTimestamp } from "../utils/utils";
 import { Db } from "mongodb";
@@ -71,10 +71,12 @@ export async function loginUserController(req: Request, res: Response) {
 		return
 	}
 
-	if (password != userExist.password) {
-		return
+	const passwordMatched : boolean = await bcrypt.compare(password, userExist.password)
+
+	if (!passwordMatched) {
+		return 
 	}
 
-	jwt.sign((userExist._id, userExist.role),"adfa")
+	const token = await loginAndReturnToken(userExist._id, userExist.role)
 
 }
