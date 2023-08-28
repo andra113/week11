@@ -21,7 +21,7 @@ function getUsersController(req, res) {
         try {
             const users = yield (0, user_1.getAllUsers)(req.db);
             (0, utils_1.loggerTimestamp)("Users fetched successfully");
-            res.json({
+            res.status(200).json({
                 success: true,
                 message: "Users fetched successfully",
                 data: users,
@@ -29,7 +29,10 @@ function getUsersController(req, res) {
         }
         catch (error) {
             (0, utils_1.loggerTimestamp)("An error occurred while fetching users: " + error);
-            res.json({});
+            res.status(500).json({
+                success: false,
+                message: "An error occurred while fetching users",
+            });
         }
     });
 }
@@ -50,7 +53,7 @@ function registerUserController(req, res) {
                 (0, utils_1.loggerTimestamp)("Registration failed: Username already exists");
                 return res.status(409).json({
                     success: false,
-                    message: "Username already exist",
+                    message: "Username already exist"
                 });
             }
             const hashedPassword = yield bcrypt_1.default.hash(password, 10);
@@ -61,17 +64,21 @@ function registerUserController(req, res) {
             };
             yield (0, user_1.registerUser)(newUser, req.db);
             (0, utils_1.loggerTimestamp)("User registered successfully: " + newUser.username);
-            res.status(200).json({
+            res.status(201).json({
                 success: true,
                 message: "Registered successfully",
                 data: {
                     username: newUser.username,
-                    role: newUser.role,
-                },
+                    role: newUser.role
+                }
             });
         }
         catch (error) {
             (0, utils_1.loggerTimestamp)("An error occurred during registration: " + error);
+            res.status(500).json({
+                success: false,
+                message: "An error occurred during registration",
+            });
         }
     });
 }
@@ -83,12 +90,18 @@ function loginUserController(req, res) {
             const userExist = yield (0, user_1.getUsernameByUsername)(username, req.db);
             if (!userExist) {
                 (0, utils_1.loggerTimestamp)("Login failed: User does not exist");
-                return;
+                return res.status(401).json({
+                    success: false,
+                    message: "Login failed: User does not exist"
+                });
             }
             const passwordMatched = yield bcrypt_1.default.compare(password, userExist.password);
             if (!passwordMatched) {
                 (0, utils_1.loggerTimestamp)("Login failed: Incorrect password");
-                return;
+                return res.status(401).json({
+                    success: false,
+                    message: "Login failed: Incorrect password"
+                });
             }
             const token = yield (0, user_1.loginAndReturnToken)(userExist._id, userExist.role);
             (0, utils_1.loggerTimestamp)("User logged in successfully: " + userExist.username);
@@ -96,12 +109,16 @@ function loginUserController(req, res) {
                 success: true,
                 message: "Successfully logged in",
                 data: {
-                    token: token,
-                },
+                    token: token
+                }
             });
         }
         catch (error) {
             (0, utils_1.loggerTimestamp)("An error occurred during login: " + error);
+            res.status(500).json({
+                success: false,
+                message: "An error occurred during login",
+            });
         }
     });
 }
