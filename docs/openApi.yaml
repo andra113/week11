@@ -143,7 +143,6 @@ components:
                 password:
                     type: string
                     example: andra123
-                    pattern: "^[a-zA-Z0-9]+$"
                 role:
                     type: string
                     enum:
