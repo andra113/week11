@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { UserModel } from "../models/dataModel";
-import { getAllUsers, registerUser } from "../services/user";
+import { getAllUsers, registerUser, getUsernameById } from "../services/user";
 import bcrypt from "bcrypt";
 import { loggerTimestamp } from "../utils/utils";
 import { Db } from "mongodb";
@@ -29,6 +29,16 @@ async function registerUserController(req: Request, res: Response) {
 				message: "Username cannot be empty or contain only whitespace.",
 			});
 		}
+
+		const usernameExist = await getUsernameById(username, req.db as Db)
+
+		if (usernameExist) {
+			return res.status(409).json({
+				success: false,
+				message: "Username already exist"
+			})
+		}
+
 		const hashedPassword = await bcrypt.hash(password, 10);
 
 		const newUser = {
@@ -49,6 +59,6 @@ async function registerUserController(req: Request, res: Response) {
         })
 
 	} catch (error) {
-		
+
 	}
 }
