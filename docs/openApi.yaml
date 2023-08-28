@@ -59,19 +59,19 @@ paths:
                                 allOf:
                                     - $ref: "#/components/schemas/ApiResponse"
                                     - properties:
-                                          success:
-                                              example: true
+                                        success:
+                                            example: true
                                     - type: object
-                                      properties:
-                                          data:
-                                              type: object
-                                              properties:
-                                                  username:
-                                                      type: string
-                                                      example: andra
-                                                  role:
-                                                      type: string
-                                                      example: user
+                                    - properties:
+                                        data:
+                                            type: object
+                                            properties:
+                                                username:
+                                                    type: string
+                                                    example: andra
+                                                role:
+                                                    type: string
+                                                    example: user
                 "409":
                     description: "Conflict: Username already exist"
                     content:
@@ -80,8 +80,8 @@ paths:
                                 allOf:
                                     - $ref: "#/components/schemas/ApiResponse"
                                     - properties:
-                                          message:
-                                              example: "Username already exist"
+                                        message:
+                                            example: "Username already exist"
                 "500":
                     description: "Internal Server Error"
                     content:
@@ -90,8 +90,8 @@ paths:
                                 allOf:
                                     - $ref: "#/components/schemas/ApiResponse"
                                     - properties:
-                                          message:
-                                              example: "Internal server error occurred"
+                                        message:
+                                            example: "Internal server error occurred"
     /api/login:
         post:
             summary: "Login an account"
@@ -154,9 +154,9 @@ components:
         User:
             allOf:
                 - type: object
-                  properties:
-                      id:
-                          type: string
+                - properties:
+                    id:
+                        type: string
                 - $ref: "#/components/schemas/RegisterUser"
         ApiResponse:
             type: object
