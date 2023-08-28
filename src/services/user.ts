@@ -19,4 +19,4 @@ async function getUsernameById(username: string, db: Db) {
 	return userResult;
 }
 
-export { getAllUsers, registerUser };
+export { getAllUsers, registerUser, getUsernameById };
