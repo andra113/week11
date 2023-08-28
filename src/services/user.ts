@@ -1,5 +1,6 @@
 import { Db } from "mongodb";
 import { UserModel } from "../models/dataModel";
+import jwt from "jsonwebtoken";
 
 async function getAllUsers(db: Db) {
 	const userCollection = db.collection("users");
@@ -13,10 +14,16 @@ async function registerUser(newUser: UserModel, db: Db) {
 	return newUserRegistered;
 }
 
-async function getUsernameById(username: string, db: Db) {
+async function getUsernameByUsername(username: string, db: Db) {
 	const userCollection = db.collection("users");
 	const userResult = await userCollection.findOne({ username: username });
 	return userResult;
 }
 
-export { getAllUsers, registerUser, getUsernameById };
+async function loginAndReturnToken(id: string, role: string): Promise<string> {
+    const payload = {id, role}
+    const token = await jwt.sign(payload, "kutulompat")
+    return token
+}
+
+export { getAllUsers, registerUser, getUsernameByUsername };

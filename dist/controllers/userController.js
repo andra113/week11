@@ -12,7 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.registerUserController = exports.getUsersController = void 0;
+exports.loginUserController = exports.registerUserController = exports.getUsersController = void 0;
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const user_1 = require("../services/user");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 // import { secretKey } from "../middleware/jwtAuth";
@@ -42,7 +43,7 @@ function registerUserController(req, res) {
                     message: "Username cannot be empty or contain only whitespace.",
                 });
             }
-            const usernameExist = yield (0, user_1.getUsernameById)(username, req.db);
+            const usernameExist = yield (0, user_1.getUsernameByUsername)(username, req.db);
             if (usernameExist) {
                 return res.status(409).json({
                     success: false,
@@ -70,3 +71,17 @@ function registerUserController(req, res) {
     });
 }
 exports.registerUserController = registerUserController;
+function loginUserController(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { username, password } = req.body;
+        const userExist = yield (0, user_1.getUsernameByUsername)(username, req.db);
+        if (!userExist) {
+            return;
+        }
+        if (password != userExist.password) {
+            return;
+        }
+        jsonwebtoken_1.default.sign((userExist._id, userExist.role), "adfa");
+    });
+}
+exports.loginUserController = loginUserController;

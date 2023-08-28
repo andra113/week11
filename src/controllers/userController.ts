@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { UserModel } from "../models/dataModel";
-import { getAllUsers, registerUser, getUsernameById } from "../services/user";
+import { getAllUsers, registerUser, getUsernameByUsername } from "../services/user";
 import bcrypt from "bcrypt";
 import { loggerTimestamp } from "../utils/utils";
 import { Db } from "mongodb";
@@ -19,7 +19,7 @@ export async function getUsersController(req: Request, res: Response) {
 		res.json({});
 	}
 }
- export async function registerUserController(req: Request, res: Response) {
+export async function registerUserController(req: Request, res: Response) {
 	try {
 		const { username, password, role } = req.body;
 
@@ -30,7 +30,7 @@ export async function getUsersController(req: Request, res: Response) {
 			});
 		}
 
-		const usernameExist = await getUsernameById(username, req.db as Db)
+		const usernameExist = await getUsernameByUsername(username, req.db as Db)
 
 		if (usernameExist) {
 			return res.status(409).json({
@@ -61,4 +61,20 @@ export async function getUsersController(req: Request, res: Response) {
 	} catch (error) {
 
 	}
+}
+
+export async function loginUserController(req: Request, res: Response) {
+	const {username, password} = req.body;
+
+	const userExist = await getUsernameByUsername(username, req.db as Db)
+	if (!userExist) {
+		return
+	}
+
+	if (password != userExist.password) {
+		return
+	}
+
+	jwt.sign((userExist._id, userExist.role),"adfa")
+
 }
