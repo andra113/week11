@@ -41,13 +41,14 @@ async function registerUserController(req: Request, res: Response) {
 
         res.status(200).json({
             success: true,
-            message: "",
+            message: "Registered succesfully",
             data: {
-                username: username,
-                role: role
+                username: newUser.username,
+                role: newUser.role
             }
-
         })
 
-	} catch (error) {}
+	} catch (error) {
+		
+	}
 }
