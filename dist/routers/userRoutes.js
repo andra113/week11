@@ -4,6 +4,6 @@ const express_1 = require("express");
 const userController_1 = require("../controllers/userController");
 const userRouter = (0, express_1.Router)();
 userRouter.get('/users', userController_1.getUsersController);
-// router.post('/register', createUserController)
+userRouter.post('/register', userController_1.registerUserController);
 // router.post('/login', loginUser)
 exports.default = userRouter;

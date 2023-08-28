@@ -9,12 +9,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllUsers = void 0;
+exports.getUsernameById = exports.registerUser = exports.getAllUsers = void 0;
 function getAllUsers(db) {
     return __awaiter(this, void 0, void 0, function* () {
-        const userCollection = db.collection('users');
+        const userCollection = db.collection("users");
         const users = yield userCollection.find().toArray();
         return users;
     });
 }
 exports.getAllUsers = getAllUsers;
+function registerUser(newUser, db) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const userCollection = db.collection("users");
+        const newUserRegistered = yield userCollection.insertOne(newUser);
+        return newUserRegistered;
+    });
+}
+exports.registerUser = registerUser;
+function getUsernameById(username, db) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const userCollection = db.collection("users");
+        const userResult = yield userCollection.findOne({ username: username });
+        return userResult;
+    });
+}
+exports.getUsernameById = getUsernameById;

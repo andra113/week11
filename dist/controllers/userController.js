@@ -8,19 +8,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUsersController = void 0;
+exports.registerUserController = exports.getUsersController = void 0;
 const user_1 = require("../services/user");
+const bcrypt_1 = __importDefault(require("bcrypt"));
 // import { secretKey } from "../middleware/jwtAuth";
 function getUsersController(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const users = yield (0, user_1.getAllUsers)(req.db);
-            console.log(users[0]);
             res.json({
                 success: true,
                 message: "Users fetched succesfully",
-                data: users
+                data: users,
             });
         }
         catch (error) {
@@ -29,3 +32,41 @@ function getUsersController(req, res) {
     });
 }
 exports.getUsersController = getUsersController;
+function registerUserController(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const { username, password, role } = req.body;
+            if (!username || username.trim() === "") {
+                return res.status(400).json({
+                    success: false,
+                    message: "Username cannot be empty or contain only whitespace.",
+                });
+            }
+            const usernameExist = yield (0, user_1.getUsernameById)(username, req.db);
+            if (usernameExist) {
+                return res.status(409).json({
+                    success: false,
+                    message: "Username already exist"
+                });
+            }
+            const hashedPassword = yield bcrypt_1.default.hash(password, 10);
+            const newUser = {
+                username,
+                password: hashedPassword,
+                role,
+            };
+            yield (0, user_1.registerUser)(newUser, req.db);
+            res.status(200).json({
+                success: true,
+                message: "Registered succesfully",
+                data: {
+                    username: newUser.username,
+                    role: newUser.role
+                }
+            });
+        }
+        catch (error) {
+        }
+    });
+}
+exports.registerUserController = registerUserController;

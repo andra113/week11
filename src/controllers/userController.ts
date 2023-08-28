@@ -19,7 +19,7 @@ export async function getUsersController(req: Request, res: Response) {
 		res.json({});
 	}
 }
-async function registerUserController(req: Request, res: Response) {
+ export async function registerUserController(req: Request, res: Response) {
 	try {
 		const { username, password, role } = req.body;
 
