@@ -1,134 +1,169 @@
 openapi: 3.0.0
 info:
-  title: 'Week 10 RevoU'
-  version: 1.0.0
-  description: 'Transfer management api assignment'
+    title: "Week 10 RevoU"
+    version: 1.0.0
+    description: "Transfer management api assignment"
 servers:
-  - url: https://amethyst-giraffe-sock.cyclic.cloud
-    description: 'Production'
-  - url: http://localhost:4000
-    description: 'Development server'
+    - url: https://amethyst-giraffe-sock.cyclic.cloud
+      description: "Production"
+    - url: http://localhost:4000
+      description: "Development server"
 paths:
-  /api/users:
-    get:
-      summary: 'Get all users'
-      responses:
-        '200':
-          description: 'Successful to get all users'
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - properties:
-                      success:
-                        example: true
-                      message:
-                        example: 'Users fetched successfully'
-                  - type: object
-                    properties:
-                      data: 
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/User'
-        '500':
-          description: 'Internal Server Error'
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - properties:
-                      message:
-                        example: 'Internal server error occurred'
-  /api/register:
-    post: 
-      summary: "Register an user account"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RegisterUser'
-      responses:
-        '200':
-          description: 'User created'
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - properties:
-                      success:
-                        example: true
-                  - type: object
-                    properties:
-                      data: 
-                        type: object
-                        properties:
-                          username:
-                            type: string
-                            example: andra
-                          role:
-                            type: string
-                            example: user
-        '409':
-          description: 'Conflict: Username already exist'
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - properties:
-                      message:
-                        example: 'Username already exist'
-        '500':
-          description: 'Internal Server Error'
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - properties:
-                      message:
-                        example: 'Internal server error occurred'
+    /api/users:
+        get:
+            summary: "Get all users"
+            responses:
+                "200":
+                    description: "Successful to get all users"
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: "#/components/schemas/ApiResponse"
+                                    - properties:
+                                          success:
+                                              example: true
+                                          message:
+                                              example: "Users fetched successfully"
+                                    - type: object
+                                      properties:
+                                          data:
+                                              type: array
+                                              items:
+                                                  $ref: "#/components/schemas/User"
+                "500":
+                    description: "Internal Server Error"
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: "#/components/schemas/ApiResponse"
+                                    - properties:
+                                          message:
+                                              example: "Internal server error occurred"
+    /api/register:
+        post:
+            summary: "Register an user account"
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/RegisterUser"
+            responses:
+                "200":
+                    description: "User created"
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: "#/components/schemas/ApiResponse"
+                                    - properties:
+                                          success:
+                                              example: true
+                                    - type: object
+                                      properties:
+                                          data:
+                                              type: object
+                                              properties:
+                                                  username:
+                                                      type: string
+                                                      example: andra
+                                                  role:
+                                                      type: string
+                                                      example: user
+                "409":
+                    description: "Conflict: Username already exist"
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: "#/components/schemas/ApiResponse"
+                                    - properties:
+                                          message:
+                                              example: "Username already exist"
+                "500":
+                    description: "Internal Server Error"
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: "#/components/schemas/ApiResponse"
+                                    - properties:
+                                          message:
+                                              example: "Internal server error occurred"
+    /api/login:
+        post:
+            summary: "Login an account"
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                username:
+                                    type: string
+                                    example: andra
+                                password:
+                                    type: string
+                                    example: andra123
+            responses:
+                "200":
+                    description: "Succesfully login"
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: "#/components/schemas/ApiResponse"
+                                    - properties:
+                                          message:
+                                              example: "Succesfully login"
+                                    - type: object
+                                      properties:
+                                          data:
+                                              type: object
+                                              properties:
+                                                  token:
+                                                      type: string
+                                                      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-  schemas:
-    RegisterUser:
-      type: object
-      properties:
-        username:
-          type: string
-          example: andra
-        password:
-          type: string
-          example: andra123
-          pattern: '^[a-zA-Z0-9]+$'
-        role:
-          type: string
-          enum:
-            - admin
-            - user
-            - approver
-            - maker
-          example: admin
-    User:
-      allOf:
-        - type: object
-          properties:
-            id:
-              type: string
-        - $ref: '#/components/schemas/RegisterUser'
-    ApiResponse:
-      type: object
-      properties:
-        success: 
-          type: boolean
-          example: false
-        message: 
-          type: string
+    securitySchemes:
+        bearerAuth:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
+    schemas:
+        RegisterUser:
+            type: object
+            properties:
+                username:
+                    type: string
+                    example: andra
+                password:
+                    type: string
+                    example: andra123
+                    pattern: "^[a-zA-Z0-9]+$"
+                role:
+                    type: string
+                    enum:
+                        - admin
+                        - user
+                        - approver
+                        - maker
+                    example: admin
+        User:
+            allOf:
+                - type: object
+                  properties:
+                      id:
+                          type: string
+                - $ref: "#/components/schemas/RegisterUser"
+        ApiResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                    example: false
+                message:
+                    type: string
