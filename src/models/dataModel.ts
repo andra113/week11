@@ -17,9 +17,6 @@ interface ReviewModel {
         location: number,
         facilities: number
     }
-    reputation: number,
-    location: number,
-    facilities: number
     comment: string
 }
 
