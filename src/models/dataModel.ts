@@ -10,4 +10,10 @@ interface SchoolModel {
     description: string,
 }
 
-export {UserModel, SchoolModel}
+interface ReviewModel {
+    reputation: number,
+    location: number,
+    facilities: number
+}
+
+export {UserModel, SchoolModel, ReviewModel}
