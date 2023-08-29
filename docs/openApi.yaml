@@ -157,6 +157,67 @@ paths:
                                     - properties:
                                         message:
                                             example: "An error occurred while processing the request"
+    /api/schools:
+        get:
+            summary: Retrieve a list of schools.
+            responses:
+                '200':
+                    description: List of schools.
+        post:
+            summary: Add a new school to the platform.
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/School'
+            responses:
+                '201':
+                    description: School added successfully.
+
+    /api/schools/{id}:
+        get:
+            summary: Retrieve details of a specific school.
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: string
+                  required: true
+                  description: ID of the school to retrieve.
+            responses:
+                '200':
+                    description: School details.
+        put:
+            summary: Update details of a specific school.
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: string
+                  required: true
+                  description: ID of the school to update.
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/School'
+            responses:
+                '200':
+                    description: School updated successfully.
+        delete:
+            summary: Delete a specific school.
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: string
+                  required: true
+                  description: ID of the school to delete.
+            responses:
+                '204':
+                    description: School deleted successfully.
+
+
 components:
     securitySchemes:
         bearerAuth:
@@ -195,4 +256,15 @@ components:
                     type: boolean
                     example: false
                 message:
+                    type: string
+        School:
+            type: object
+            properties:
+                name:
+                    type: string
+                location:
+                    type: string
+                description:
+                    type: string
+                website:
                     type: string
