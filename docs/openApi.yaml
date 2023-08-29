@@ -4,10 +4,10 @@ info:
     version: 1.0.0
     description: "Transfer management api assignment"
 servers:
-    - url: https://amethyst-giraffe-sock.cyclic.cloud
-      description: "Production"
-    - url: http://localhost:4000
-      description: "Development server"
+    -   url: https://amethyst-giraffe-sock.cyclic.cloud
+        description: "Production"
+    -   url: http://localhost:4000
+        description: "Development server"
 paths:
     /api/users:
         get:
@@ -26,7 +26,7 @@ paths:
                                         message:
                                             example: "Users fetched successfully"
                                     - type: object
-                                      properties:
+                                    - properties:
                                         data:
                                             type: array
                                             items:
@@ -174,7 +174,7 @@ paths:
                                         message:
                                             example: "Schools fetched successfully"
                                     - type: object
-                                      properties:
+                                    - properties:
                                         data:
                                             type: array
                                             items:
@@ -234,24 +234,24 @@ paths:
         get:
             summary: Retrieve details of a specific school.
             parameters:
-                - in: path
-                  name: id
-                  schema:
-                    type: string
-                  required: true
-                  description: ID of the school to retrieve.
+                -   in: path
+                    name: id
+                    schema:
+                        type: string
+                    required: true
+                    description: ID of the school to retrieve.
             responses:
                 "200":
                     description: School details.
         put:
             summary: Update details of a specific school.
             parameters:
-                - in: path
-                  name: id
-                  schema:
-                    type: string
-                  required: true
-                  description: ID of the school to update.
+                -   in: path
+                    name: id
+                    schema:
+                        type: string
+                    required: true
+                    description: ID of the school to update.
             requestBody:
                 content:
                     application/json:
@@ -263,12 +263,12 @@ paths:
         delete:
             summary: Delete a specific school.
             parameters:
-                - in: path
-                  name: id
-                  schema:
-                    type: string
-                  required: true
-                  description: ID of the school to delete.
+                -   in: path
+                    name: id
+                    schema:
+                        type: string
+                    required: true
+                    description: ID of the school to delete.
             responses:
                 "204":
                     description: School deleted successfully.
@@ -322,6 +322,4 @@ components:
                     example: Depok
                 description:
                     type: string
-                website:
-                    type: string
-                
+                    example: Universitas jaket kuning

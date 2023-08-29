@@ -1,5 +1,5 @@
 import { Db, ObjectId } from "mongodb";
-import { UserModel } from "../models/dataModel";
+import { SchoolModel } from "../models/dataModel";
 
 export async function getAllSchool(db: Db) {
 	const schoolCollection = db.collection("schools");
@@ -7,7 +7,7 @@ export async function getAllSchool(db: Db) {
 	return schools;
 }
 
-export async function addSchool(newSchool: UserModel, db: Db) {
+export async function addSchool(newSchool: SchoolModel, db: Db) {
 	const schoolCollection = db.collection("school");
 	const newSchoolAdded = await schoolCollection.insertOne(newSchool);
 	return newSchoolAdded;
@@ -22,5 +22,11 @@ export async function getSchoolById(id: string, db: Db) {
 export async function deletSchoolById(id: string, db: Db) {
 	const schoolCollection = db.collection("school");
 	const schoolResult = await schoolCollection.deleteOne({ _id: new ObjectId(id) });
+	return schoolResult;
+}
+
+export async function getSchoolByName(name: string, db: Db) {
+	const schoolCollection = db.collection("school");
+	const schoolResult = await schoolCollection.deleteOne({ name: name });
 	return schoolResult;
 }
