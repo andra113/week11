@@ -11,9 +11,16 @@ interface SchoolModel {
 }
 
 interface ReviewModel {
+    schoolId: string,
+    rating: {
+        reputation: number,
+        location: number,
+        facilities: number
+    }
     reputation: number,
     location: number,
     facilities: number
+    comment: string
 }
 
 export {UserModel, SchoolModel, ReviewModel}
