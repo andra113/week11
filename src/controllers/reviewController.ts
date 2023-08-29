@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { getAllReviews, addReview } from "../services/review";
+import { getSchoolById } from "../services/school";
 import { Db } from "mongodb";
 import { loggerTimestamp } from "../utils/utils";
 
@@ -23,9 +24,20 @@ export async function getReviewsController(req: Request, res: Response) {
 
 export async function addReviewController(req: Request, res: Response) {
     try {
-        const { schoolId, rating, comment} = req.body;
+        const schoolId = req.params.schoolId
+        const { rating, comment} = req.body;
 
         // You might want to perform validation and error checking here
+
+        const schoolExist = await getSchoolById(schoolId, req.db as Db)
+
+        if (!schoolExist) {
+            loggerTimestamp("Add school review failed: School doesn't exists on database");
+            return res.status(404).json({
+                success: false,
+                message: "School doesn't exist: please add the school first."
+            });
+        }
 
         const newReview = {
             schoolId,

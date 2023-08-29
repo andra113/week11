@@ -193,11 +193,11 @@ paths:
                                                                     example: 3.3
                                                                 reputation:
                                                                     type: number
-                                                                    format: integer
+                                                                    format: int32
                                                                     example: 5
                                                                 facilities:
                                                                     type: number
-                                                                    format: integer
+                                                                    format: int32
                                                                     example: 3
                                                                 location:
                                                                     type: number
@@ -428,19 +428,19 @@ components:
                     properties:
                         reputation:
                             type: number
-                            format: integer
+                            format: int32
                             minimum: 1
                             maximum: 5
                             example: 5
                         location:
                             type: number
-                            format: integer
+                            format: int32
                             minimum: 1
                             maximum: 5
                             example: 3
                         facilities:
                             type: number
-                            format: integer
+                            format: int32
                             minimum: 1
                             maximum: 5
                             example: 4

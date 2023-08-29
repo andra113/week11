@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.addReviewController = exports.getReviewsController = void 0;
 const review_1 = require("../services/review");
+const school_1 = require("../services/school");
 const utils_1 = require("../utils/utils");
 function getReviewsController(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -36,8 +37,17 @@ exports.getReviewsController = getReviewsController;
 function addReviewController(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const { schoolId, rating, comment } = req.body;
+            const schoolId = req.params.schoolId;
+            const { rating, comment } = req.body;
             // You might want to perform validation and error checking here
+            const schoolExist = yield (0, school_1.getSchoolById)(schoolId, req.db);
+            if (!schoolExist) {
+                (0, utils_1.loggerTimestamp)("Add school review failed: School doesn't exists on database");
+                return res.status(404).json({
+                    success: false,
+                    message: "School doesn't exist: please add the school first."
+                });
+            }
             const newReview = {
                 schoolId,
                 rating: {
