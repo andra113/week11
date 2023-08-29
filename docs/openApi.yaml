@@ -229,7 +229,45 @@ paths:
                                         data:
                                             allOf:
                                                 - $ref: "#/components/schemas/School"
-
+                '400':
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                - $ref: "#/components/schemas/ApiResponse"
+                                - properties:
+                                    success:
+                                        example: false
+                                    message:
+                                        type: string
+                                        example: School name cannot be empty or contain only whitespace.
+                '409':
+                    description: School already exists
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                - $ref: "#/components/schemas/ApiResponse"
+                                - properties:
+                                    success:
+                                        example: false
+                                    message:
+                                        type: string
+                                        example: School already exist
+                '500':
+                    description: An error occurred
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                - $ref: "#/components/schemas/ApiResponse"
+                                - properties:
+                                    success:
+                                        example: false
+                                    message:
+                                        type: string
+                                        example: An error occurred during adding school
     /api/schools/{id}:
         get:
             summary: Retrieve details of a specific school.
@@ -272,7 +310,66 @@ paths:
             responses:
                 "204":
                     description: School deleted successfully.
-
+    /api/schools/{schoolId}/reviews:
+        post:
+            summary: Add a review for a school
+            parameters:
+                -   in: path
+                    name: schoolId
+                    required: true
+                    schema:
+                        type: string
+                    description: ID of the school
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Review"
+            responses:
+                '201':
+                    description: Successfully added the review.
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                - $ref: "#/components/schemas/ApiResponse"
+                                - properties:
+                                    success:
+                                        example: true
+                                    message:
+                                        type: string
+                                        example: Successfully added the review.
+                                - type: object
+                                - properties:
+                                    data:
+                                        $ref: "#/components/schemas/Review"
+                '400':
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                - $ref: "#/components/schemas/ApiResponse"
+                                - properties:
+                                    success:
+                                        example: false
+                                    message:
+                                        type: string
+                                        example: Invalid review data.
+                '404':
+                    description: School not found
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                - $ref: "#/components/schemas/ApiResponse"
+                                - properties:
+                                    success:
+                                        example: false
+                                    message:
+                                        type: string
+                                        example: School not found.
 components:
     securitySchemes:
         bearerAuth:
@@ -323,3 +420,30 @@ components:
                 description:
                     type: string
                     example: Universitas jaket kuning
+        Review:
+            type: object
+            properties:
+                rating:
+                    type: object
+                    properties:
+                        reputation:
+                            type: number
+                            format: integer
+                            minimum: 1
+                            maximum: 5
+                            example: 5
+                        location:
+                            type: number
+                            format: integer
+                            minimum: 1
+                            maximum: 5
+                            example: 3
+                        facilities:
+                            type: number
+                            format: integer
+                            minimum: 1
+                            maximum: 5
+                            example: 4
+                comment:
+                    type: string
+                    example: "Great University!"

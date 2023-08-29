@@ -5,6 +5,7 @@ import swaggerJSDoc from "swagger-jsdoc";
 import * as OpenApiValidator from "express-openapi-validator";
 import cors from "cors";
 import userRouter from "./routers/userRoutes";
+import schoolRouter from "./routers/schoolRoutes";
 import databaseMiddleware from "./middlewares/databaseMiddleware";
 import errorHandler from "./middlewares/errorHandler";
 
@@ -31,6 +32,7 @@ app.use(
     }),
 );
 app.use('/api', userRouter)
+app.use('/api', schoolRouter)
 app.use(errorHandler)
 
 
