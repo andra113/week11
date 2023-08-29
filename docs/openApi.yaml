@@ -51,7 +51,7 @@ paths:
                         schema:
                             $ref: "#/components/schemas/RegisterUser"
             responses:
-                "200":
+                "201":
                     description: "User created"
                     content:
                         application/json:
@@ -212,7 +212,23 @@ paths:
                             $ref: "#/components/schemas/School"
             responses:
                 "201":
-                    description: School added successfully.
+                    description: "Successfully added the school."
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: "#/components/schemas/ApiResponse"
+                                    - properties:
+                                        success:
+                                            example: true
+                                        message:
+                                            type: string
+                                            example: Successfully added the school.
+                                    - type: object
+                                    - properties:
+                                        data:
+                                            allOf:
+                                                - $ref: "#/components/schemas/School"
 
     /api/schools/{id}:
         get:
