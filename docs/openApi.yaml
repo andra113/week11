@@ -59,19 +59,19 @@ paths:
                                 allOf:
                                     - $ref: "#/components/schemas/ApiResponse"
                                     - properties:
-                                        success:
-                                            example: true
+                                          success:
+                                              example: true
                                     - type: object
                                     - properties:
-                                        data:
-                                            type: object
-                                            properties:
-                                                username:
-                                                    type: string
-                                                    example: andra
-                                                role:
-                                                    type: string
-                                                    example: user
+                                          data:
+                                              type: object
+                                              properties:
+                                                  username:
+                                                      type: string
+                                                      example: andra
+                                                  role:
+                                                      type: string
+                                                      example: user
                 "409":
                     description: "Conflict: Username already exist"
                     content:
@@ -80,8 +80,8 @@ paths:
                                 allOf:
                                     - $ref: "#/components/schemas/ApiResponse"
                                     - properties:
-                                        message:
-                                            example: "Username already exist"
+                                          message:
+                                              example: "Username already exist"
                 "500":
                     description: "Internal Server Error"
                     content:
@@ -90,8 +90,8 @@ paths:
                                 allOf:
                                     - $ref: "#/components/schemas/ApiResponse"
                                     - properties:
-                                        message:
-                                            example: "Internal server error occurred"
+                                          message:
+                                              example: "Internal server error occurred"
     /api/login:
         post:
             summary: "Login an account"
@@ -117,16 +117,16 @@ paths:
                                 allOf:
                                     - $ref: "#/components/schemas/ApiResponse"
                                     - properties:
-                                        message:
-                                            example: "Succesfully login"
+                                          message:
+                                              example: "Succesfully login"
                                     - type: object
                                     - properties:
-                                        data:
-                                            type: object
-                                            properties:
-                                                token:
-                                                    type: string
-                                                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+                                          data:
+                                              type: object
+                                              properties:
+                                                  token:
+                                                      type: string
+                                                      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
                 "400":
                     description: "Bad Request"
                     content:
@@ -135,8 +135,8 @@ paths:
                                 allOf:
                                     - $ref: "#/components/schemas/ApiResponse"
                                     - properties:
-                                        message:
-                                            example: "Incorrect password"
+                                          message:
+                                              example: "Incorrect password"
                 "401":
                     description: "Unauthorized"
                     content:
@@ -145,8 +145,8 @@ paths:
                                 allOf:
                                     - $ref: "#/components/schemas/ApiResponse"
                                     - properties:
-                                        message:
-                                            example: "Unauthorized: Invalid credentials"
+                                          message:
+                                              example: "Unauthorized: Invalid credentials"
                 "500":
                     description: "Internal Server Error"
                     content:
@@ -155,23 +155,63 @@ paths:
                                 allOf:
                                     - $ref: "#/components/schemas/ApiResponse"
                                     - properties:
-                                        message:
-                                            example: "An error occurred while processing the request"
+                                          message:
+                                              example: "An error occurred while processing the request"
     /api/schools:
         get:
             summary: Retrieve a list of schools.
             responses:
-                '200':
+                "200":
                     description: List of schools.
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: "#/components/schemas/ApiResponse"
+                                    - properties:
+                                          success:
+                                              example: true
+                                          message:
+                                              example: "Schools fetched successfully"
+                                    - type: object
+                                      properties:
+                                          data:
+                                              type: array
+                                              items:
+                                                allOf:
+                                                  - properties:
+                                                      id:
+                                                        type: string
+                                                  - $ref: "#/components/schemas/School"
+                                                  - properties:
+                                                        rating:
+                                                            type: object
+                                                            properties:
+                                                                overall:
+                                                                    type: number
+                                                                    format: float
+                                                                    example: 3.3
+                                                                reputation:
+                                                                    type: number
+                                                                    format: integer
+                                                                    example: 5
+                                                                facilities:
+                                                                    type: number
+                                                                    format: integer
+                                                                    example: 3
+                                                                location:
+                                                                    type: number
+                                                                    format: ingeger
+                                                                    example: 2
         post:
             summary: Add a new school to the platform.
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/School'
+                            $ref: "#/components/schemas/School"
             responses:
-                '201':
+                "201":
                     description: School added successfully.
 
     /api/schools/{id}:
@@ -185,7 +225,7 @@ paths:
                   required: true
                   description: ID of the school to retrieve.
             responses:
-                '200':
+                "200":
                     description: School details.
         put:
             summary: Update details of a specific school.
@@ -200,9 +240,9 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/School'
+                            $ref: "#/components/schemas/School"
             responses:
-                '200':
+                "200":
                     description: School updated successfully.
         delete:
             summary: Delete a specific school.
@@ -214,9 +254,8 @@ paths:
                   required: true
                   description: ID of the school to delete.
             responses:
-                '204':
+                "204":
                     description: School deleted successfully.
-
 
 components:
     securitySchemes:
@@ -238,16 +277,15 @@ components:
                     type: string
                     enum:
                         - admin
+                        - moderator
                         - user
-                        - approver
-                        - maker
                     example: admin
         User:
             allOf:
                 - type: object
                 - properties:
-                    id:
-                        type: string
+                      id:
+                          type: string
                 - $ref: "#/components/schemas/RegisterUser"
         ApiResponse:
             type: object
@@ -262,9 +300,12 @@ components:
             properties:
                 name:
                     type: string
+                    example: Universitas Indonesia
                 location:
                     type: string
+                    example: Depok
                 description:
                     type: string
                 website:
                     type: string
+                
