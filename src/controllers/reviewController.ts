@@ -3,6 +3,8 @@ import { getAllReviews, addReview } from "../services/review";
 import { getSchoolById } from "../services/school";
 import { Db } from "mongodb";
 import { loggerTimestamp } from "../utils/utils";
+import jwt from "jsonwebtoken";
+import { secretKey } from "../configs/envInit";
 
 export async function getReviewsController(req: Request, res: Response) {
     try {
@@ -24,10 +26,10 @@ export async function getReviewsController(req: Request, res: Response) {
 
 export async function addReviewController(req: Request, res: Response) {
     try {
+        const token = req.headers.authorization?.split(' ')[1]!;
         const schoolId = req.params.schoolId
         const { rating, comment} = req.body;
-
-        // You might want to perform validation and error checking here
+        loggerTimestamp("adding review")
 
         const schoolExist = await getSchoolById(schoolId, req.db as Db)
 
@@ -39,8 +41,11 @@ export async function addReviewController(req: Request, res: Response) {
             });
         }
 
+        const decodedToken = jwt.verify(token, secretKey) as {id: string};
+        const userId = decodedToken.id
         const newReview = {
             schoolId,
+            userId,
             rating: {
                 reputation: rating.reputation,
                 location: rating.location,
@@ -53,10 +58,20 @@ export async function addReviewController(req: Request, res: Response) {
         await addReview(newReview, req.db as Db);
 
         loggerTimestamp("Review added successfully");
+        console.log(newReview)
         res.status(201).json({
             success: true,
             message: "Review added successfully",
-            data: newReview,
+            data: {
+                schoolId: newReview.schoolId,
+                userId: newReview.userId,
+                rating: {
+                    reputation: newReview.rating.reputation,
+                    location: newReview.rating.location,
+                    facilities: newReview.rating.facilities
+                },
+                comment
+            }
         });
     } catch (error) {
         loggerTimestamp("An error occurred while adding review: " + error);

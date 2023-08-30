@@ -343,7 +343,14 @@ paths:
                                 - type: object
                                 - properties:
                                     data:
-                                        $ref: "#/components/schemas/Review"
+                                        allOf:
+                                        -   type: object
+                                            properties:
+                                                schoolId:
+                                                    type: string
+                                                userid:
+                                                    type: string
+                                        -   $ref: "#/components/schemas/Review"
                 '400':
                     description: Invalid request
                     content:

@@ -4,6 +4,7 @@ import { getAllUsers, registerUser, getUsernameByUsername, loginAndReturnToken }
 import bcrypt from "bcrypt";
 import { loggerTimestamp } from "../utils/utils";
 import { Db } from "mongodb";
+import { secretKey } from "../configs/envInit";
 
 export async function getUsersController(req: Request, res: Response) {
     try {

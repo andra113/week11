@@ -33,6 +33,7 @@ const OpenApiValidator = __importStar(require("express-openapi-validator"));
 const cors_1 = __importDefault(require("cors"));
 const userRoutes_1 = __importDefault(require("./routers/userRoutes"));
 const schoolRoutes_1 = __importDefault(require("./routers/schoolRoutes"));
+const reviewRoutes_1 = __importDefault(require("./routers/reviewRoutes"));
 const databaseMiddleware_1 = __importDefault(require("./middlewares/databaseMiddleware"));
 const errorHandler_1 = __importDefault(require("./middlewares/errorHandler"));
 const fs = __importStar(require("fs"));
@@ -53,6 +54,7 @@ app.use(OpenApiValidator.middleware({
 }));
 app.use('/api', userRoutes_1.default);
 app.use('/api', schoolRoutes_1.default);
+app.use('/api', reviewRoutes_1.default);
 app.use(errorHandler_1.default);
 app.listen(port, () => {
     console.log(`server listen ${port}`);

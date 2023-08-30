@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loginAndReturnToken = exports.getUsernameByUsername = exports.registerUser = exports.getAllUsers = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const envInit_1 = require("../configs/envInit");
 function getAllUsers(db) {
     return __awaiter(this, void 0, void 0, function* () {
         const userCollection = db.collection("users");
@@ -41,7 +42,7 @@ exports.getUsernameByUsername = getUsernameByUsername;
 function loginAndReturnToken(id, role) {
     return __awaiter(this, void 0, void 0, function* () {
         const payload = { id, role };
-        const token = yield jsonwebtoken_1.default.sign(payload, "kutulompat");
+        const token = yield jsonwebtoken_1.default.sign(payload, envInit_1.secretKey);
         return token;
     });
 }

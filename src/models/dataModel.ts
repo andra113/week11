@@ -12,6 +12,7 @@ interface SchoolModel {
 
 interface ReviewModel {
     schoolId: string,
+    userId: string
     rating: {
         reputation: number,
         location: number,

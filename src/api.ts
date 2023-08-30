@@ -6,6 +6,7 @@ import * as OpenApiValidator from "express-openapi-validator";
 import cors from "cors";
 import userRouter from "./routers/userRoutes";
 import schoolRouter from "./routers/schoolRoutes";
+import reviewRouter from "./routers/reviewRoutes";
 import databaseMiddleware from "./middlewares/databaseMiddleware";
 import errorHandler from "./middlewares/errorHandler";
 
@@ -22,7 +23,7 @@ const port = process.env.PORT;
 
 app.use(cors());
 app.use(express.json());
-app.use(databaseMiddleware)
+app.use(databaseMiddleware);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(
     OpenApiValidator.middleware({
@@ -31,9 +32,10 @@ app.use(
         validateResponses: true, // false by default
     }),
 );
-app.use('/api', userRouter)
-app.use('/api', schoolRouter)
-app.use(errorHandler)
+app.use('/api', userRouter);
+app.use('/api', schoolRouter);
+app.use('/api', reviewRouter);
+app.use(errorHandler);
 
 
 

@@ -8,11 +8,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.addReviewController = exports.getReviewsController = void 0;
 const review_1 = require("../services/review");
 const school_1 = require("../services/school");
 const utils_1 = require("../utils/utils");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const envInit_1 = require("../configs/envInit");
 function getReviewsController(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -35,11 +40,13 @@ function getReviewsController(req, res) {
 }
 exports.getReviewsController = getReviewsController;
 function addReviewController(req, res) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
             const schoolId = req.params.schoolId;
             const { rating, comment } = req.body;
-            // You might want to perform validation and error checking here
+            (0, utils_1.loggerTimestamp)("adding review");
             const schoolExist = yield (0, school_1.getSchoolById)(schoolId, req.db);
             if (!schoolExist) {
                 (0, utils_1.loggerTimestamp)("Add school review failed: School doesn't exists on database");
@@ -48,8 +55,11 @@ function addReviewController(req, res) {
                     message: "School doesn't exist: please add the school first."
                 });
             }
+            const decodedToken = jsonwebtoken_1.default.verify(token, envInit_1.secretKey);
+            const userId = decodedToken.id;
             const newReview = {
                 schoolId,
+                userId,
                 rating: {
                     reputation: rating.reputation,
                     location: rating.location,
@@ -60,10 +70,20 @@ function addReviewController(req, res) {
             // Assuming you have an addReview function to add the review to your database
             yield (0, review_1.addReview)(newReview, req.db);
             (0, utils_1.loggerTimestamp)("Review added successfully");
+            console.log(newReview);
             res.status(201).json({
                 success: true,
                 message: "Review added successfully",
-                data: newReview,
+                data: {
+                    schoolId: newReview.schoolId,
+                    userId: newReview.userId,
+                    rating: {
+                        reputation: newReview.rating.reputation,
+                        location: newReview.rating.location,
+                        facilities: newReview.rating.facilities
+                    },
+                    comment
+                }
             });
         }
         catch (error) {
