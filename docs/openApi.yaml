@@ -12,6 +12,11 @@ paths:
     /api/users:
         get:
             summary: "Get all users"
+            security:
+                - apiKeyAuth: []
+            description: "This endpoint can only be accessed by users with the 'admin' role."
+            tags:
+                - users
             responses:
                 "200":
                     description: "Successful to get all users"
@@ -51,9 +56,38 @@ paths:
                                     - properties:
                                         message:
                                             example: "Internal server error occurred"
+        patch:
+            summary: "Update specific user"
+            security:
+                - apiKeyAuth: []
+            description: "This endpoint can only be accessed by users with the 'admin' role."
+            tags:
+                - users
+            parameters:
+                -   in: query
+                    name: _id
+                    required: true
+                    schema:
+                        type: string
+                    description: "ID of the user to update"
+            responses:
+                "204":
+                    description: "User updated successfully"
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: "#/components/schemas/ApiResponse"
+                                    - properties:
+                                        success:
+                                            example: true
+                                        message:
+                                            example: "User updated successfully"
     /api/auth/register:
         post:
             summary: "Register an user account"
+            tags:
+                - Auth
             requestBody:
                 required: true
                 content:
@@ -105,6 +139,8 @@ paths:
     /api/auth/login:
         post:
             summary: "Login an account"
+            tags:
+                - Auth
             requestBody:
                 required: true
                 content:
@@ -170,6 +206,11 @@ paths:
     /api/schools:
         get:
             summary: Retrieve a list of schools.
+            security:
+                - apiKeyAuth: []
+            description: "This endpoint can only be accessed by users with the 'admin', 'moderator', and 'user' role."
+            tags:
+                - Schools
             responses:
                 "200":
                     description: List of schools.
@@ -225,6 +266,11 @@ paths:
                                             example: "Unauthorized"
         post:
             summary: Add a new school to the platform.
+            security:
+                - apiKeyAuth: []
+            description: "This endpoint can only be accessed by users with the 'admin', 'moderator', and 'user' role."
+            tags:
+                - Schools
             requestBody:
                 content:
                     application/json:
@@ -301,6 +347,11 @@ paths:
     /api/schools/{id}:
         get:
             summary: Retrieve details of a specific school.
+            security:
+                - apiKeyAuth: []
+            description: "This endpoint can only be accessed by users with the 'admin', 'moderator', and 'user' role."
+            tags:
+                - Schools
             parameters:
                 -   in: path
                     name: id
@@ -323,6 +374,11 @@ paths:
                                             example: "Unauthorized"
         put:
             summary: Update details of a specific school.
+            security:
+                - apiKeyAuth: []
+            description: "This endpoint can only be accessed by users with the 'admin', and 'moderator'."
+            tags:
+                - Schools
             parameters:
                 -   in: path
                     name: id
@@ -350,6 +406,11 @@ paths:
                                             example: "Unauthorized"
         delete:
             summary: Delete a specific school.
+            security:
+                - apiKeyAuth: []
+            description: "This endpoint can only be accessed by users with the 'admin', and 'moderator'."
+            tags:
+                - Schools
             parameters:
                 -   in: path
                     name: id
@@ -360,6 +421,17 @@ paths:
             responses:
                 "204":
                     description: School deleted successfully.
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: "#/components/schemas/ApiResponse"
+                                    - properties:
+                                        message:
+                                            example: "The school successfully deleted"
+                                        data:
+                                            allOf:
+                                                - $ref: "#/components/schemas/School"
                 '401':
                     description: Unauthorized
                     content:
@@ -370,6 +442,26 @@ paths:
                                     - properties:
                                         message:
                                             example: "Unauthorized"
+                "404":
+                    description: School not found.
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: "#/components/schemas/ApiResponse"
+                                    - properties:
+                                        message:
+                                            example: "School with the specified ID not found"
+                "500":
+                    description: Internal Server Error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: "#/components/schemas/ApiResponse"
+                                    - properties:
+                                        message:
+                                            example: "Internal server error occurred"
     /api/reviews:
         get:
             summary: Get all reviews
@@ -424,7 +516,9 @@ paths:
                                         example: "An error occurred while fetching Reviews"
     /api/schools/{schoolId}/reviews:
         post:
-            summary: Add a review for a school
+            summary: Add a review to a school
+            tags:
+                - Reviews
             parameters:
                 -   in: path
                     name: schoolId
@@ -501,10 +595,11 @@ paths:
                                         example: School not found.
 components:
     securitySchemes:
-        bearerAuth:
-            type: http
-            scheme: bearer
-            bearerFormat: JWT
+        apiKeyAuth:
+                type: apiKey
+                in: header
+                name: Authorization
+                description: "Provide a valid JWT token in the Authorization header"
     schemas:
         RegisterUser:
             type: object
@@ -576,3 +671,4 @@ components:
                 comment:
                     type: string
                     example: "Great University!"
+    

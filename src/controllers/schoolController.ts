@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { getAllSchool, addSchool, getSchoolById, getSchoolByName } from "../services/school";
+import { getAllSchool, addSchool, getSchoolById, getSchoolByName,deletSchoolById } from "../services/school";
 import bcrypt from "bcrypt";
 import { loggerTimestamp } from "../utils/utils";
 import { Db } from "mongodb";
