@@ -22,3 +22,11 @@ function authenticationMiddleware(req, res, next) {
         return res.status(401).json({ message: "Token not valid" });
     }
 }
+function authorizationMiddleware(roles) {
+    return function (req, res, next) {
+        if (!roles.includes(req.role)) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+        next();
+    };
+}

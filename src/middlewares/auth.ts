@@ -14,10 +14,7 @@ function authenticationMiddleware(req: AuthenticatedRequest, res: Response, next
 		return res.status(401).json({ message: "Token not found" });
 	}
 	try {
-		const payload: any = jwt.verify(
-			token,
-			secretKey
-		);
+		const payload: any = jwt.verify(token,secretKey);
 		req.role = payload.role;
 		next();
 	} catch (error) {
@@ -25,3 +22,13 @@ function authenticationMiddleware(req: AuthenticatedRequest, res: Response, next
 		return res.status(401).json({ message: "Token not valid" });
 	}
 }
+
+function authorizationMiddleware(roles: string[]): (req: AuthenticatedRequest, res: Response, next: NextFunction) => void {
+    return function(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+        if (!roles.includes(req.role)) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+        next();
+        };
+}
+    
