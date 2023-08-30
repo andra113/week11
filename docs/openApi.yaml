@@ -31,6 +31,16 @@ paths:
                                             type: array
                                             items:
                                                 $ref: "#/components/schemas/User"
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: "#/components/schemas/ApiResponse"
+                                    - properties:
+                                        message:
+                                            example: "Unauthorized"
                 "500":
                     description: "Internal Server Error"
                     content:
@@ -41,7 +51,7 @@ paths:
                                     - properties:
                                         message:
                                             example: "Internal server error occurred"
-    /api/register:
+    /api/auth/register:
         post:
             summary: "Register an user account"
             requestBody:
@@ -92,7 +102,7 @@ paths:
                                     - properties:
                                         message:
                                             example: "Internal server error occurred"
-    /api/login:
+    /api/auth/login:
         post:
             summary: "Login an account"
             requestBody:
@@ -201,8 +211,18 @@ paths:
                                                                     example: 3
                                                                 location:
                                                                     type: number
-                                                                    format: ingeger
+                                                                    format: int32
                                                                     example: 2
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: "#/components/schemas/ApiResponse"
+                                    - properties:
+                                        message:
+                                            example: "Unauthorized"
         post:
             summary: Add a new school to the platform.
             requestBody:
@@ -242,6 +262,16 @@ paths:
                                     message:
                                         type: string
                                         example: School name cannot be empty or contain only whitespace.
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: "#/components/schemas/ApiResponse"
+                                    - properties:
+                                        message:
+                                            example: "Unauthorized"
                 '409':
                     description: School already exists
                     content:
@@ -281,6 +311,16 @@ paths:
             responses:
                 "200":
                     description: School details.
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: "#/components/schemas/ApiResponse"
+                                    - properties:
+                                        message:
+                                            example: "Unauthorized"
         put:
             summary: Update details of a specific school.
             parameters:
@@ -298,6 +338,16 @@ paths:
             responses:
                 "200":
                     description: School updated successfully.
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: "#/components/schemas/ApiResponse"
+                                    - properties:
+                                        message:
+                                            example: "Unauthorized"
         delete:
             summary: Delete a specific school.
             parameters:
@@ -310,6 +360,68 @@ paths:
             responses:
                 "204":
                     description: School deleted successfully.
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: "#/components/schemas/ApiResponse"
+                                    - properties:
+                                        message:
+                                            example: "Unauthorized"
+    /api/reviews:
+        get:
+            summary: Get all reviews
+            tags:
+                - Reviews
+            responses:
+                '200':
+                    description: Reviews fetched successfully
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                - $ref: "#/components/schemas/ApiResponse"
+                                - properties:
+                                    success:
+                                        example: true
+                                    message:
+                                        example: "Reviews fetched successfully"
+                                    data:
+                                        type: array
+                                        items:
+                                            allOf:
+                                                - properties:
+                                                    id:
+                                                        type: string
+                                                    userId:
+                                                        type: string
+                                                    schoolId:
+                                                        type: string
+                                                -  $ref: "#/components/schemas/Review"  # Reference to your Review schema
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: "#/components/schemas/ApiResponse"
+                                    - properties:
+                                        message:
+                                            example: "Unauthorized"
+                '500':
+                    description: An error occurred while fetching Reviews
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                - $ref: "#/components/schemas/ApiResponse"
+                                - properties:
+                                    success:
+                                        example: false
+                                    message:
+                                        example: "An error occurred while fetching Reviews"
     /api/schools/{schoolId}/reviews:
         post:
             summary: Add a review for a school
@@ -364,6 +476,16 @@ paths:
                                     message:
                                         type: string
                                         example: Invalid review data.
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: "#/components/schemas/ApiResponse"
+                                    - properties:
+                                        message:
+                                            example: "Unauthorized"
                 '404':
                     description: School not found
                     content:

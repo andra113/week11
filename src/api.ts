@@ -9,8 +9,6 @@ import schoolRouter from "./routers/schoolRoutes";
 import reviewRouter from "./routers/reviewRoutes";
 import databaseMiddleware from "./middlewares/databaseMiddleware";
 import errorHandler from "./middlewares/errorHandler";
-import { AuthenticatedRequest } from "./middlewares/auth";
-
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 import authRouter from "./routers/authRoutes";
@@ -36,10 +34,11 @@ app.use(
         validateResponses: true, // false by default
     }),
 );
-app.use(authenticationMiddleware);
 app.use('/api/auth', authRouter);
+app.use('/api', authenticationMiddleware);
 app.use('/api', schoolRouter);
 app.use('/api', reviewRouter);
+app.use('/api', userRouter)
 app.use(errorHandler);
 
 
