@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getschoolsController, addSchoolController,  } from "../controllers/schoolController";
+import { getschoolsController, addSchoolController, deleteSchoolController, updatetSchoolController,  } from "../controllers/schoolController";
 
 const schoolRouter = Router()
 
@@ -7,6 +7,10 @@ const schoolRouter = Router()
 schoolRouter.get('/schools', getschoolsController);
 
 schoolRouter.post('/schools', addSchoolController);
+
+schoolRouter.delete('/schools/:schoolId', deleteSchoolController )
+
+schoolRouter.patch('/schools/:schoolId', updatetSchoolController)
 
 
 

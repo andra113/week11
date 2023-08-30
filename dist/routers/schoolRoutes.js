@@ -5,5 +5,7 @@ const schoolController_1 = require("../controllers/schoolController");
 const schoolRouter = (0, express_1.Router)();
 schoolRouter.get('/schools', schoolController_1.getschoolsController);
 schoolRouter.post('/schools', schoolController_1.addSchoolController);
+schoolRouter.delete('/schools/:schoolId', schoolController_1.deleteSchoolController);
+schoolRouter.patch('/schools/:schoolId', schoolController_1.updatetSchoolController);
 // router.post('/login', loginUser)
 exports.default = schoolRouter;

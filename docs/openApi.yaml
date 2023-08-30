@@ -372,7 +372,7 @@ paths:
                                     - properties:
                                         message:
                                             example: "Unauthorized"
-        put:
+        patch:
             summary: Update details of a specific school.
             security:
                 - apiKeyAuth: []
@@ -394,8 +394,6 @@ paths:
             responses:
                 "200":
                     description: School updated successfully.
-                '401':
-                    description: Unauthorized
                     content:
                         application/json:
                             schema:
@@ -403,35 +401,7 @@ paths:
                                     - $ref: "#/components/schemas/ApiResponse"
                                     - properties:
                                         message:
-                                            example: "Unauthorized"
-        delete:
-            summary: Delete a specific school.
-            security:
-                - apiKeyAuth: []
-            description: "This endpoint can only be accessed by users with the 'admin', and 'moderator'."
-            tags:
-                - Schools
-            parameters:
-                -   in: path
-                    name: id
-                    schema:
-                        type: string
-                    required: true
-                    description: ID of the school to delete.
-            responses:
-                "204":
-                    description: School deleted successfully.
-                    content:
-                        application/json:
-                            schema:
-                                allOf:
-                                    - $ref: "#/components/schemas/ApiResponse"
-                                    - properties:
-                                        message:
-                                            example: "The school successfully deleted"
-                                        data:
-                                            allOf:
-                                                - $ref: "#/components/schemas/School"
+                                            example: "School updated successfully"
                 '401':
                     description: Unauthorized
                     content:
@@ -451,7 +421,64 @@ paths:
                                     - $ref: "#/components/schemas/ApiResponse"
                                     - properties:
                                         message:
-                                            example: "School with the specified ID not found"
+                                            example: "School doesn't exist"
+                "500":
+                    description: Internal Server Error
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: "#/components/schemas/ApiResponse"
+                                    - properties:
+                                        message:
+                                            example: "Internal server error occurred"
+        delete:
+            summary: Delete a specific school.
+            security:
+                - apiKeyAuth: []
+            description: "This endpoint can only be accessed by users with the 'admin', and 'moderator'."
+            tags:
+                - Schools
+            parameters:
+                -   in: path
+                    name: id
+                    schema:
+                        type: string
+                    required: true
+                    description: ID of the school to delete.
+            responses:
+                "200":
+                    description: School deleted successfully.
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: "#/components/schemas/ApiResponse"
+                                    - properties:
+                                        message:
+                                            example: "The school successfully deleted"
+                                        data:
+                                            $ref: "#/components/schemas/School"
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: "#/components/schemas/ApiResponse"
+                                    - properties:
+                                        message:
+                                            example: "Unauthorized"
+                "404":
+                    description: School not found.
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: "#/components/schemas/ApiResponse"
+                                    - properties:
+                                        message:
+                                            example: "School doesn't exist"
                 "500":
                     description: Internal Server Error
                     content:
