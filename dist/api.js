@@ -31,13 +31,14 @@ const dotenv = __importStar(require("dotenv"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const OpenApiValidator = __importStar(require("express-openapi-validator"));
 const cors_1 = __importDefault(require("cors"));
-const userRoutes_1 = __importDefault(require("./routers/userRoutes"));
 const schoolRoutes_1 = __importDefault(require("./routers/schoolRoutes"));
 const reviewRoutes_1 = __importDefault(require("./routers/reviewRoutes"));
 const databaseMiddleware_1 = __importDefault(require("./middlewares/databaseMiddleware"));
 const errorHandler_1 = __importDefault(require("./middlewares/errorHandler"));
 const fs = __importStar(require("fs"));
 const yaml = __importStar(require("js-yaml"));
+const authRoutes_1 = __importDefault(require("./routers/authRoutes"));
+const auth_1 = require("./middlewares/auth");
 const yamlContent = fs.readFileSync('docs/openApi.yaml', 'utf8');
 const swaggerDocument = yaml.load(yamlContent);
 dotenv.config();
@@ -52,7 +53,8 @@ app.use(OpenApiValidator.middleware({
     validateRequests: true,
     validateResponses: true, // false by default
 }));
-app.use('/api', userRoutes_1.default);
+app.use(auth_1.authenticationMiddleware);
+app.use('/api/auth', authRoutes_1.default);
 app.use('/api', schoolRoutes_1.default);
 app.use('/api', reviewRoutes_1.default);
 app.use(errorHandler_1.default);

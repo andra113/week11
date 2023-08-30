@@ -9,9 +9,12 @@ import schoolRouter from "./routers/schoolRoutes";
 import reviewRouter from "./routers/reviewRoutes";
 import databaseMiddleware from "./middlewares/databaseMiddleware";
 import errorHandler from "./middlewares/errorHandler";
+import { AuthenticatedRequest } from "./middlewares/auth";
 
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
+import authRouter from "./routers/authRoutes";
+import { authenticationMiddleware } from "./middlewares/auth";
 
 const yamlContent = fs.readFileSync('docs/openApi.yaml', 'utf8');
 const swaggerDocument: any = yaml.load(yamlContent)
@@ -20,6 +23,7 @@ dotenv.config()
 
 const app: Express = express();
 const port = process.env.PORT;
+
 
 app.use(cors());
 app.use(express.json());
@@ -32,7 +36,8 @@ app.use(
         validateResponses: true, // false by default
     }),
 );
-app.use('/api', userRouter);
+app.use(authenticationMiddleware);
+app.use('/api/auth', authRouter);
 app.use('/api', schoolRouter);
 app.use('/api', reviewRouter);
 app.use(errorHandler);

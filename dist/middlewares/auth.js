@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.authorizationMiddleware = exports.authenticationMiddleware = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const envInit_1 = require("../configs/envInit");
 const utils_1 = require("../utils/utils");
@@ -14,7 +15,7 @@ function authenticationMiddleware(req, res, next) {
     }
     try {
         const payload = jsonwebtoken_1.default.verify(token, envInit_1.secretKey);
-        req.role = payload.role;
+        req.role = payload.role; // Assign role directly to the request
         next();
     }
     catch (error) {
@@ -22,6 +23,7 @@ function authenticationMiddleware(req, res, next) {
         return res.status(401).json({ message: "Token not valid" });
     }
 }
+exports.authenticationMiddleware = authenticationMiddleware;
 function authorizationMiddleware(roles) {
     return function (req, res, next) {
         if (!roles.includes(req.role)) {
@@ -30,3 +32,4 @@ function authorizationMiddleware(roles) {
         next();
     };
 }
+exports.authorizationMiddleware = authorizationMiddleware;
