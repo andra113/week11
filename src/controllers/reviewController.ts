@@ -29,6 +29,7 @@ export async function addReviewController(req: Request, res: Response) {
         const token = req.headers.authorization?.split(' ')[1]!;
         const schoolId = req.params.schoolId
         const { rating, comment} = req.body;
+        const status = "pending"
         loggerTimestamp("adding review")
 
         const schoolExist = await getSchoolById(schoolId, req.db as Db)
@@ -51,7 +52,8 @@ export async function addReviewController(req: Request, res: Response) {
                 location: rating.location,
                 facilities: rating.facilities
             },
-            comment
+            comment,
+            status
         };
 
         // Assuming you have an addReview function to add the review to your database
@@ -70,7 +72,8 @@ export async function addReviewController(req: Request, res: Response) {
                     location: newReview.rating.location,
                     facilities: newReview.rating.facilities
                 },
-                comment
+                comment,
+                status: newReview.status
             }
         });
     } catch (error) {

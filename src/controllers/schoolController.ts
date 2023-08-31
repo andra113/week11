@@ -33,6 +33,7 @@ export async function getschoolsController(req: Request, res: Response) {
 export async function addSchoolController(req: Request, res: Response) {
 	try {
 		const { name, location, description } = req.body;
+		const status = "pending"
 
 		if (!name || name.trim() === "") {
 			loggerTimestamp("Invalid add request: School name is empty");
@@ -57,6 +58,7 @@ export async function addSchoolController(req: Request, res: Response) {
 			name,
 			location,
 			description,
+			status
 		};
 
 		await addSchool(newSchool, req.db as Db);
@@ -69,6 +71,7 @@ export async function addSchoolController(req: Request, res: Response) {
 				name: newSchool.name,
 				location: newSchool.location,
 				description: newSchool.description,
+				status: newSchool.status
 			},
 		});
 	} catch (error) {

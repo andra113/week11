@@ -46,6 +46,7 @@ function addReviewController(req, res) {
             const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
             const schoolId = req.params.schoolId;
             const { rating, comment } = req.body;
+            const status = "pending";
             (0, utils_1.loggerTimestamp)("adding review");
             const schoolExist = yield (0, school_1.getSchoolById)(schoolId, req.db);
             if (!schoolExist) {
@@ -65,7 +66,8 @@ function addReviewController(req, res) {
                     location: rating.location,
                     facilities: rating.facilities
                 },
-                comment
+                comment,
+                status
             };
             // Assuming you have an addReview function to add the review to your database
             yield (0, review_1.addReview)(newReview, req.db);
@@ -82,7 +84,8 @@ function addReviewController(req, res) {
                         location: newReview.rating.location,
                         facilities: newReview.rating.facilities
                     },
-                    comment
+                    comment,
+                    status: newReview.status
                 }
             });
         }

@@ -37,6 +37,7 @@ function addSchoolController(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const { name, location, description } = req.body;
+            const status = "pending";
             if (!name || name.trim() === "") {
                 (0, utils_1.loggerTimestamp)("Invalid add request: School name is empty");
                 return res.status(400).json({
@@ -56,6 +57,7 @@ function addSchoolController(req, res) {
                 name,
                 location,
                 description,
+                status
             };
             yield (0, school_1.addSchool)(newSchool, req.db);
             (0, utils_1.loggerTimestamp)("School added successfully: " + newSchool.name);
@@ -66,6 +68,7 @@ function addSchoolController(req, res) {
                     name: newSchool.name,
                     location: newSchool.location,
                     description: newSchool.description,
+                    status: newSchool.status
                 },
             });
         }

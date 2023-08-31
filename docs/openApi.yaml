@@ -4,10 +4,15 @@ info:
     version: 1.0.0
     description: "Transfer management api assignment"
 servers:
-    -   url: https://amethyst-giraffe-sock.cyclic.cloud
-        description: "Production"
-    -   url: http://localhost:4000
+    # -   url: https://amethyst-giraffe-sock.cyclic.cloud
+    #     description: "Production"
+    -   url: http://localhost:8000
         description: "Development server"
+tags:
+    - name: Auth
+    - name: Users
+    - name: Schools
+    - name: Reviews
 paths:
     /api/users:
         get:
@@ -16,7 +21,7 @@ paths:
                 - apiKeyAuth: []
             description: "This endpoint can only be accessed by users with the 'admin' role."
             tags:
-                - users
+                - Users
             responses:
                 "200":
                     description: "Successful to get all users"
@@ -62,7 +67,7 @@ paths:
                 - apiKeyAuth: []
             description: "This endpoint can only be accessed by users with the 'admin' role."
             tags:
-                - users
+                - Users
             parameters:
                 -   in: query
                     name: _id
@@ -254,6 +259,9 @@ paths:
                                                                     type: number
                                                                     format: int32
                                                                     example: 2
+                                                        status:
+                                                            type: string
+                                                            example: pending
                 '401':
                     description: Unauthorized
                     content:
@@ -492,6 +500,8 @@ paths:
     /api/reviews:
         get:
             summary: Get all reviews
+            security:
+                - apiKeyAuth: []
             tags:
                 - Reviews
             responses:
@@ -518,7 +528,11 @@ paths:
                                                         type: string
                                                     schoolId:
                                                         type: string
-                                                -  $ref: "#/components/schemas/Review"  # Reference to your Review schema
+                                                -   $ref: "#/components/schemas/Review"
+                                                -   properties:
+                                                        status:
+                                                            type: string
+                                                            example: pending
                 '401':
                     description: Unauthorized
                     content:
@@ -544,8 +558,10 @@ paths:
     /api/schools/{schoolId}/reviews:
         post:
             summary: Add a review to a school
+            security:
+                - apiKeyAuth: []
             tags:
-                - Reviews
+                - Schools
             parameters:
                 -   in: path
                     name: schoolId
@@ -583,7 +599,7 @@ paths:
                                                     type: string
                                                 userid:
                                                     type: string
-                                        -   $ref: "#/components/schemas/Review"
+                                        -   $ref: "#/components/schemas/Review"             
                 '400':
                     description: Invalid request
                     content:
@@ -620,6 +636,65 @@ paths:
                                     message:
                                         type: string
                                         example: School not found.
+    /api/reviews/{reviewId}/approve:
+        put:
+            summary: Approve a pending review
+            security:
+                - apiKeyAuth: []
+            tags:
+                - Reviews
+            parameters:
+                -   in: path
+                    name: reviewId
+                    required: true
+                    schema:
+                        type: string
+                    description: ID of the review to approve
+            responses:
+                '204':
+                    description: Review approved successfully
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ApiResponse"
+                '404':
+                    description: Review not found
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ApiResponse"
+
+    /api/reviews/{reviewId}/reject:
+        put:
+            summary: Reject a pending review
+            security:
+                - apiKeyAuth: []
+            tags:
+                - Reviews
+            parameters:
+                -   in: path
+                    name: reviewId
+                    required: true
+                    schema:
+                        type: string
+                    description: ID of the review to reject
+            responses:
+                '204':
+                    description: Review rejected successfully
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ApiResponse"
+                '404':
+                    description: Review not found
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ApiResponse"
 components:
     securitySchemes:
         apiKeyAuth:
@@ -637,6 +712,8 @@ components:
                 password:
                     type: string
                     example: andra123
+                    pattern: "^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$"
+                    description: A string with at least one letter and one number
                 role:
                     type: string
                     enum:

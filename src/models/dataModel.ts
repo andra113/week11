@@ -8,6 +8,7 @@ interface SchoolModel {
     name: string,
     location: string,
     description: string,
+    status: string
 }
 
 interface ReviewModel {
@@ -18,7 +19,8 @@ interface ReviewModel {
         location: number,
         facilities: number
     }
-    comment: string
+    comment: string,
+    status: string
 }
 
 export {UserModel, SchoolModel, ReviewModel}

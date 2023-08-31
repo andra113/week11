@@ -9,7 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addReview = exports.getAllReviews = void 0;
+exports.updatetReviewById = exports.deletReviewById = exports.getReviewById = exports.addReview = exports.getAllReviews = void 0;
+const mongodb_1 = require("mongodb");
 function getAllReviews(db) {
     return __awaiter(this, void 0, void 0, function* () {
         const reviewCollection = db.collection("reviews");
@@ -26,3 +27,33 @@ function addReview(newReview, db) {
     });
 }
 exports.addReview = addReview;
+function getReviewById(id, db) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const reviewCollection = db.collection("review");
+        const reviewResult = yield reviewCollection.findOne({ _id: new mongodb_1.ObjectId(id) });
+        return reviewResult;
+    });
+}
+exports.getReviewById = getReviewById;
+function deletReviewById(id, db) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const reviewCollection = db.collection("reviews");
+        const reviewResult = yield reviewCollection.findOneAndDelete({ _id: new mongodb_1.ObjectId(id) });
+        return reviewResult;
+    });
+}
+exports.deletReviewById = deletReviewById;
+function updatetReviewById(id, updateField, db) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const reviewCollection = db.collection("reviews");
+        const setField = {};
+        for (const key in updateField) {
+            setField[key] = updateField[key];
+        }
+        const reviewResult = yield reviewCollection.updateOne({ _id: new mongodb_1.ObjectId(id) }, {
+            $set: setField
+        });
+        return reviewResult;
+    });
+}
+exports.updatetReviewById = updatetReviewById;
