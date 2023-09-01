@@ -45,5 +45,5 @@ app.use(errorHandler);
 
 
 app.listen(port, () => {
-    console.log(`server listen ${port}`);
+    console.log(`server listen at ${port}`);
 });
