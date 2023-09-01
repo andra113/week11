@@ -8,6 +8,7 @@ interface SchoolModel {
     name: string,
     location: string,
     description: string,
+    imgUrl: string
     status: string
 }
 

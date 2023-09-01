@@ -14,8 +14,16 @@ export async function addReview(newReview: ReviewModel, db: Db) {
 }
 
 export async function getReviewById(id: string, db: Db) {
-	const reviewCollection = db.collection("review");
+	const reviewCollection = db.collection("reviews");
 	const reviewResult = await reviewCollection.findOne({ _id: new ObjectId(id) });
+	return reviewResult;
+}
+
+export async function getReviewbySchoolId(schoolId: string, db: Db) {
+	const reviewCollection = db.collection("reviews");
+	const reviewResult = await reviewCollection.find({schoolId: schoolId}).toArray();
+	console.log(schoolId);
+	console.log(reviewResult);
 	return reviewResult;
 }
 

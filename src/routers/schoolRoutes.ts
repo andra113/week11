@@ -5,7 +5,6 @@ import { authorizationMiddleware } from "../middlewares/auth";
 const schoolRouter = Router()
 
 
-schoolRouter.get('/schools', authorizationMiddleware(["admin", "moderator", "user"]), getschoolsController);
 
 schoolRouter.post('/schools', authorizationMiddleware(["admin", "moderator", "user"]), addSchoolController);
 

@@ -11,8 +11,8 @@ import databaseMiddleware from "./middlewares/databaseMiddleware";
 import errorHandler from "./middlewares/errorHandler";
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
-import authRouter from "./routers/authRoutes";
 import { authenticationMiddleware } from "./middlewares/auth";
+import noauthRouter from "./routers/noauthRoutes";
 
 const yamlContent = fs.readFileSync('docs/openApi.yaml', 'utf8');
 const swaggerDocument: any = yaml.load(yamlContent)
@@ -34,7 +34,7 @@ app.use(
         validateResponses: true, // false by default
     }),
 );
-app.use('/api/auth', authRouter);
+app.use('/api/noauth', noauthRouter);
 app.use('/api', authenticationMiddleware);
 app.use('/api', schoolRouter);
 app.use('/api', reviewRouter);

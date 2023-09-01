@@ -36,7 +36,7 @@ exports.getschoolsController = getschoolsController;
 function addSchoolController(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const { name, location, description } = req.body;
+            const { name, location, description, imgUrl } = req.body;
             const status = "pending";
             if (!name || name.trim() === "") {
                 (0, utils_1.loggerTimestamp)("Invalid add request: School name is empty");
@@ -57,6 +57,7 @@ function addSchoolController(req, res) {
                 name,
                 location,
                 description,
+                imgUrl,
                 status
             };
             yield (0, school_1.addSchool)(newSchool, req.db);
@@ -95,7 +96,7 @@ function deleteSchoolController(req, res) {
                 });
             }
             res.status(200).json({
-                succes: false,
+                success: true,
                 message: "The school successfully deleted",
                 data: {
                     name: (_a = deleteResult.value) === null || _a === void 0 ? void 0 : _a.name,
@@ -122,7 +123,7 @@ function updatetSchoolController(req, res) {
             const schoolExist = yield (0, school_1.getSchoolById)(schoolId, req.db);
             if (!schoolExist) {
                 (0, utils_1.loggerTimestamp)("Updating school failed: School doesnt exist");
-                return res.status(409).json({
+                return res.status(404).json({
                     success: false,
                     message: "School doesnt exist",
                 });

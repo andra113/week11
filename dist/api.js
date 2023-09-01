@@ -38,8 +38,8 @@ const databaseMiddleware_1 = __importDefault(require("./middlewares/databaseMidd
 const errorHandler_1 = __importDefault(require("./middlewares/errorHandler"));
 const fs = __importStar(require("fs"));
 const yaml = __importStar(require("js-yaml"));
-const authRoutes_1 = __importDefault(require("./routers/authRoutes"));
 const auth_1 = require("./middlewares/auth");
+const noauthRoutes_1 = __importDefault(require("./routers/noauthRoutes"));
 const yamlContent = fs.readFileSync('docs/openApi.yaml', 'utf8');
 const swaggerDocument = yaml.load(yamlContent);
 dotenv.config();
@@ -54,7 +54,7 @@ app.use(OpenApiValidator.middleware({
     validateRequests: true,
     validateResponses: true, // false by default
 }));
-app.use('/api/auth', authRoutes_1.default);
+app.use('/api/noauth', noauthRoutes_1.default);
 app.use('/api', auth_1.authenticationMiddleware);
 app.use('/api', schoolRoutes_1.default);
 app.use('/api', reviewRoutes_1.default);

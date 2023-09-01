@@ -32,7 +32,7 @@ export async function getschoolsController(req: Request, res: Response) {
 
 export async function addSchoolController(req: Request, res: Response) {
 	try {
-		const { name, location, description } = req.body;
+		const { name, location, description,imgUrl } = req.body;
 		const status = "pending"
 
 		if (!name || name.trim() === "") {
@@ -58,6 +58,7 @@ export async function addSchoolController(req: Request, res: Response) {
 			name,
 			location,
 			description,
+			imgUrl,
 			status
 		};
 
@@ -96,7 +97,7 @@ export async function deleteSchoolController(req: Request, res: Response) {
 		}
 
 		res.status(200).json({
-			succes: false,
+			success: true,
 			message: "The school successfully deleted",
 			data: {
 				name: deleteResult.value?.name,
@@ -123,7 +124,7 @@ export async function updatetSchoolController(req: Request, res: Response) {
 
 		if (!schoolExist) {
 			loggerTimestamp("Updating school failed: School doesnt exist");
-			return res.status(409).json({
+			return res.status(404).json({
 				success: false,
 				message: "School doesnt exist",
 			});

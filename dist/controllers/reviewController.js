@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addReviewController = exports.getReviewsController = void 0;
+exports.rejectReviewController = exports.approveReviewController = exports.addReviewController = exports.getReviewsBySchoolController = exports.getReviewsController = void 0;
 const review_1 = require("../services/review");
 const school_1 = require("../services/school");
 const utils_1 = require("../utils/utils");
@@ -39,6 +39,28 @@ function getReviewsController(req, res) {
     });
 }
 exports.getReviewsController = getReviewsController;
+function getReviewsBySchoolController(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const schoolId = req.params.schoolId;
+            const reviews = yield (0, review_1.getReviewbySchoolId)(schoolId, req.db); // You'll need to implement the `getAllReviews` function.
+            (0, utils_1.loggerTimestamp)("Reviews fetched successfully");
+            res.status(200).json({
+                success: true,
+                message: "Reviews fetched successfully",
+                data: reviews,
+            });
+        }
+        catch (error) {
+            (0, utils_1.loggerTimestamp)("An error occurred while fetching Reviews: " + error);
+            res.status(500).json({
+                success: false,
+                message: "An error occurred while fetching Reviews",
+            });
+        }
+    });
+}
+exports.getReviewsBySchoolController = getReviewsBySchoolController;
 function addReviewController(req, res) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
@@ -72,7 +94,6 @@ function addReviewController(req, res) {
             // Assuming you have an addReview function to add the review to your database
             yield (0, review_1.addReview)(newReview, req.db);
             (0, utils_1.loggerTimestamp)("Review added successfully");
-            console.log(newReview);
             res.status(201).json({
                 success: true,
                 message: "Review added successfully",
@@ -99,3 +120,69 @@ function addReviewController(req, res) {
     });
 }
 exports.addReviewController = addReviewController;
+function approveReviewController(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const reviewId = req.params.reviewId;
+            const status = "approved";
+            const reviewExist = yield (0, review_1.getReviewById)(reviewId, req.db);
+            if (!reviewExist) {
+                (0, utils_1.loggerTimestamp)("Approving review status failed: review doesnt exist");
+                return res.status(404).json({
+                    success: false,
+                    message: "Review doesnt exist",
+                });
+            }
+            const updateField = {};
+            if (status) {
+                updateField.status = status;
+            }
+            yield (0, review_1.updatetReviewById)(reviewId, updateField, req.db);
+            res.status(200).json({
+                succes: true,
+                message: "Succesfully approving the review",
+            });
+        }
+        catch (error) {
+            (0, utils_1.loggerTimestamp)("An error occurred during updating school: " + error);
+            res.status(500).json({
+                success: false,
+                message: "An error occurred during approving the review",
+            });
+        }
+    });
+}
+exports.approveReviewController = approveReviewController;
+function rejectReviewController(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const reviewId = req.params.reviewId;
+            const status = "rejected";
+            const reviewExist = yield (0, review_1.getReviewById)(reviewId, req.db);
+            if (!reviewExist) {
+                (0, utils_1.loggerTimestamp)("Rejecting review status failed: review doesnt exist");
+                return res.status(404).json({
+                    success: false,
+                    message: "Review doesnt exist",
+                });
+            }
+            const updateField = {};
+            if (status) {
+                updateField.status = status;
+            }
+            yield (0, review_1.updatetReviewById)(reviewId, updateField, req.db);
+            res.status(200).json({
+                succes: true,
+                message: "Succesfully rejecting a review",
+            });
+        }
+        catch (error) {
+            (0, utils_1.loggerTimestamp)("An error occurred during rejecting a review " + error);
+            res.status(500).json({
+                success: false,
+                message: "An error occurred during rejecting a review",
+            });
+        }
+    });
+}
+exports.rejectReviewController = rejectReviewController;

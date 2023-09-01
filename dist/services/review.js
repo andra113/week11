@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updatetReviewById = exports.deletReviewById = exports.getReviewById = exports.addReview = exports.getAllReviews = void 0;
+exports.updatetReviewById = exports.deletReviewById = exports.getReviewbySchoolId = exports.getReviewById = exports.addReview = exports.getAllReviews = void 0;
 const mongodb_1 = require("mongodb");
 function getAllReviews(db) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -29,12 +29,22 @@ function addReview(newReview, db) {
 exports.addReview = addReview;
 function getReviewById(id, db) {
     return __awaiter(this, void 0, void 0, function* () {
-        const reviewCollection = db.collection("review");
+        const reviewCollection = db.collection("reviews");
         const reviewResult = yield reviewCollection.findOne({ _id: new mongodb_1.ObjectId(id) });
         return reviewResult;
     });
 }
 exports.getReviewById = getReviewById;
+function getReviewbySchoolId(schoolId, db) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const reviewCollection = db.collection("reviews");
+        const reviewResult = yield reviewCollection.find({ schoolId: schoolId }).toArray();
+        console.log(schoolId);
+        console.log(reviewResult);
+        return reviewResult;
+    });
+}
+exports.getReviewbySchoolId = getReviewbySchoolId;
 function deletReviewById(id, db) {
     return __awaiter(this, void 0, void 0, function* () {
         const reviewCollection = db.collection("reviews");

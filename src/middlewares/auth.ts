@@ -31,7 +31,7 @@ export function authorizationMiddleware(roles: string[]): (req: Request, res: Re
         if (!roles.includes(req.role!)) {
             return res.status(401).json({ 
 				success: false,
-				message: "Unauthorized, only " + roles + " can access this"  });
+				message: "Unauthorized, only " + roles + " can access this. Your role: " + req.role  });
         }
         next();
     };
