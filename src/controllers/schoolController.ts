@@ -59,7 +59,12 @@ export async function addSchoolController(req: Request, res: Response) {
 			location,
 			description,
 			imgUrl,
-			status
+			status,
+			rating: {
+				reputation: 0,
+				location: 0,
+				facilities: 0
+			},
 		};
 
 		await addSchool(newSchool, req.db as Db);

@@ -58,7 +58,12 @@ function addSchoolController(req, res) {
                 location,
                 description,
                 imgUrl,
-                status
+                status,
+                rating: {
+                    reputation: 0,
+                    location: 0,
+                    facilities: 0
+                },
             };
             yield (0, school_1.addSchool)(newSchool, req.db);
             (0, utils_1.loggerTimestamp)("School added successfully: " + newSchool.name);

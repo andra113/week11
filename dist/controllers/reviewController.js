@@ -91,8 +91,21 @@ function addReviewController(req, res) {
                 comment,
                 status
             };
-            // Assuming you have an addReview function to add the review to your database
             yield (0, review_1.addReview)(newReview, req.db);
+            const reviews = yield (0, review_1.getAllReviews)(req.db);
+            const reviewModels = reviews.map((review) => ({
+                _id: review._id.toString(),
+                schoolId: review.schoolId,
+                userId: review.userId,
+                rating: {
+                    reputation: review.rating.reputation,
+                    location: review.rating.location,
+                    facilities: review.rating.facilities,
+                },
+                comment: review.comment,
+                status: review.status,
+            }));
+            yield (0, school_1.updateSchoolRating)(schoolId, reviewModels, req.db);
             (0, utils_1.loggerTimestamp)("Review added successfully");
             res.status(201).json({
                 success: true,

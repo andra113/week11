@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
 import { getAllReviews, addReview, getReviewbySchoolId, getReviewById, updatetReviewById } from "../services/review";
-import { getSchoolById } from "../services/school";
-import { Db } from "mongodb";
+import { getSchoolById, updateSchoolRating } from "../services/school";
+import { Db, WithId } from "mongodb";
 import { loggerTimestamp } from "../utils/utils";
 import jwt from "jsonwebtoken";
 import { secretKey } from "../configs/envInit";
+import { ReviewModel } from "../models/dataModel";
 
 export async function getReviewsController(req: Request, res: Response) {
     try {
@@ -75,8 +76,23 @@ export async function addReviewController(req: Request, res: Response) {
             status
         };
 
-        // Assuming you have an addReview function to add the review to your database
         await addReview(newReview, req.db as Db);
+        const reviews = await getAllReviews(req.db as Db);
+        
+        const reviewModels: ReviewModel[] = reviews.map((review) => ({
+            _id: review._id.toString(), 
+            schoolId: review.schoolId,
+            userId: review.userId,
+            rating: {
+                reputation: review.rating.reputation,
+                location: review.rating.location,
+                facilities: review.rating.facilities,
+            },
+            comment: review.comment,
+            status: review.status,
+        }));
+
+        await updateSchoolRating(schoolId, reviewModels, req.db as Db);
 
         loggerTimestamp("Review added successfully");
         res.status(201).json({

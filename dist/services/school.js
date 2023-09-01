@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updatetSchoolById = exports.getSchoolByName = exports.deletSchoolById = exports.getSchoolById = exports.addSchool = exports.getAllSchool = void 0;
+exports.updateSchoolRating = exports.updatetSchoolById = exports.getSchoolByName = exports.deletSchoolById = exports.getSchoolById = exports.addSchool = exports.getAllSchool = void 0;
 const mongodb_1 = require("mongodb");
 function getAllSchool(db) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -30,7 +30,9 @@ exports.addSchool = addSchool;
 function getSchoolById(id, db) {
     return __awaiter(this, void 0, void 0, function* () {
         const schoolCollection = db.collection("schools");
-        const schoolResult = yield schoolCollection.findOne({ _id: new mongodb_1.ObjectId(id) });
+        const schoolResult = yield schoolCollection.findOne({
+            _id: new mongodb_1.ObjectId(id),
+        });
         return schoolResult;
     });
 }
@@ -38,7 +40,9 @@ exports.getSchoolById = getSchoolById;
 function deletSchoolById(id, db) {
     return __awaiter(this, void 0, void 0, function* () {
         const schoolCollection = db.collection("schools");
-        const schoolResult = yield schoolCollection.findOneAndDelete({ _id: new mongodb_1.ObjectId(id) });
+        const schoolResult = yield schoolCollection.findOneAndDelete({
+            _id: new mongodb_1.ObjectId(id),
+        });
         return schoolResult;
     });
 }
@@ -59,9 +63,34 @@ function updatetSchoolById(id, updateField, db) {
             setField[key] = updateField[key];
         }
         const schoolResult = yield schoolCollection.updateOne({ _id: new mongodb_1.ObjectId(id) }, {
-            $set: setField
+            $set: setField,
         });
         return schoolResult;
     });
 }
 exports.updatetSchoolById = updatetSchoolById;
+function updateSchoolRating(schoolId, reviews, db) {
+    const schoolCollection = db.collection("schools");
+    const schoolReviews = reviews.filter((review) => review.schoolId === schoolId);
+    const totalReviews = schoolReviews.length;
+    const averageRating = schoolReviews.reduce((acc, review) => {
+        acc.reputation += review.rating.reputation;
+        acc.location += review.rating.location;
+        acc.facilities += review.rating.facilities;
+        return acc;
+    }, { reputation: 0, location: 0, facilities: 0 });
+    if (totalReviews > 0) {
+        averageRating.reputation /= totalReviews;
+        averageRating.location /= totalReviews;
+        averageRating.facilities /= totalReviews;
+    }
+    const result = schoolCollection.updateOne({ _id: new mongodb_1.ObjectId(schoolId) }, {
+        $set: {
+            "rating.reputation": averageRating.reputation,
+            "rating.location": averageRating.location,
+            "rating.facilities": averageRating.facilities,
+        },
+    });
+    return result;
+}
+exports.updateSchoolRating = updateSchoolRating;
